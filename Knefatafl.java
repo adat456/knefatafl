@@ -25,8 +25,6 @@ public class Knefatafl {
         Player attacker = new Player(attackersName, "Attackers");
         Player defender = new Player(defendersName, "Defenders");
         Game game = new Game(attacker, defender, turnTimeLimit);
-        
-        
 
         while ((Move.getTotalMoves() < Move.getMoveLimit()) && game.getVictor() == null) {
             Player currentPlayer = game.getCurrentPlayer();
@@ -43,19 +41,21 @@ public class Knefatafl {
 
             boolean moveMade = false;
             while (!moveMade) {
-                System.out.print("First move: ");
+                System.out.print("Move piece " + pieceID + " to square: ");
                 int x = input.nextInt();
                 int y = input.nextInt();
                 int[] coords = {x, y};
 
-                try {
-                    currentPlayer.attemptMove(currentPlayer.getPiece(pieceID), coords);
+                Piece piece = currentPlayer.getPiece(pieceID);
+                Square startingSquare = piece.getCurrentSquare();
+                Square endingSquare = Square.getSquare(coords);
+
+                if (Move.isMoveValid(game, piece, startingSquare, endingSquare)) {
+                    currentPlayer.addNewestMove(piece, startingSquare, endingSquare);
+                    piece.setCurrentSquare(endingSquare);
                     moveMade = true;
-                } catch (IllegalArgumentException ex) {
-                    System.out.println(ex.getMessage());
                 }
             }
-
             game.switchTurn();
         }
 

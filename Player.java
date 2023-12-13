@@ -19,11 +19,13 @@ public class Player {
             int[][] attackerCoords = {{0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}, {1, 5}, {10, 3}, {10, 4}, {10, 5}, {10, 6}, {10, 7}, {9, 5}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}, {5, 1}, {3, 10}, {4, 10}, {5, 10}, {6, 10}, {7, 10}, {5, 9}};
             for (int i = 0; i < 24; i++) {
                 allPieces.add(new Minion(String.format("%s%d", "A", i), Square.getSquare(attackerCoords[i])));
+                Square.getSquare(attackerCoords[i]).toggleOccupied();
             }
         } else if (team.equals("Defenders")) {
             int[][] defenderCoords = {{5, 3}, {4, 4}, {5, 4}, {6, 4}, {3, 5}, {4, 5}, {6, 5}, {7, 5}, {4, 6}, {5, 6}, {6, 6}, {5, 7}};
             for (int i = 0; i < 12; i++) {
                 allPieces.add(new Minion(String.format("%s%d", "D", i), Square.getSquare(defenderCoords[i])));
+                Square.getSquare(defenderCoords[i]).toggleOccupied();
             }
             allPieces.add(new King(Square.getSquare(new int[] {5, 5})));
         }
@@ -53,20 +55,7 @@ public class Player {
         return allPieces.get(pieceIndex);
     }
 
-    public void attemptMove(Piece piece, int[] coords) throws IllegalArgumentException {
-        try {
-            Square currentSquare = piece.getCurrentSquare();
-            Square endingSquare = Square.getSquare(coords);
-
-            Move.validate(piece, currentSquare, endingSquare);
-            addNewestMove(piece, currentSquare, endingSquare);
-            piece.setCurrentSquare(endingSquare);
-        } catch (IllegalArgumentException ex) {
-            throw ex;
-        }
-    }
-
-    private void addNewestMove(Piece piece, Square currentSquare, Square endingSquare) {
+    public void addNewestMove(Piece piece, Square currentSquare, Square endingSquare) {
         Move newMove = new Move(piece, currentSquare, endingSquare);
         allMoves.add(newMove);
     }

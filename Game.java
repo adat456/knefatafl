@@ -6,6 +6,7 @@ public class Game {
     private Player attacker;
     private Player defender;
     private Player victor;
+    private String errorMessage;
 
     public Game(Player attacker, Player defender) {
         this.attacker = attacker;
@@ -19,11 +20,16 @@ public class Game {
         this.turnTimeLimit = turnTimeLimit;
     }
 
+    public void displayErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+        System.out.println(errorMessage);
+    }
+
     public void switchTurn () {
         if (currentPlayer.getTeam().equals("Attackers")) {
             currentPlayer = defender;
         } else {
-            currentPlayer = defender;
+            currentPlayer = attacker;
         }
     }
 
