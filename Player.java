@@ -1,6 +1,8 @@
 package knefatafl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class Player {
     private String name;
@@ -50,9 +52,19 @@ public class Player {
         return true;
     }
 
-    public Piece getPiece(String pieceID) {
+    public Piece getPieceByID(String pieceID) {
         int pieceIndex = Integer.parseInt(pieceID.substring(1));
         return allPieces.get(pieceIndex);
+    }
+
+    public Piece[] getPieceBySquare(Square square) {
+        Piece[] targetPiece = new Piece[1];
+        for (Piece currentPiece : allPieces) {
+            if (currentPiece.getCurrentSquare().equals(square)) {
+                targetPiece[0] = currentPiece;
+            }
+        }
+        return targetPiece;
     }
 
     public void addNewestMove(Piece piece, Square currentSquare, Square endingSquare) {

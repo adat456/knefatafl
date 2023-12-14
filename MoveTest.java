@@ -3,7 +3,6 @@ package knefatafl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,7 +39,7 @@ class MoveTest {
     // isMoveValid
     @Test
     void isMoveValidSameStartingAndEndingSquaresShouldReturnFalse() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = piece.getCurrentSquare();
 
@@ -49,7 +48,7 @@ class MoveTest {
 
     @Test
     void isMoveValidDiagonalMovesShouldReturnFalse() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = Square.getSquare(new int[] {1, 2});
 
@@ -67,7 +66,7 @@ class MoveTest {
 
     @Test
     void isMoveValidMinionMovingToRefugeShouldReturnFalse() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = Square.getSquare(new int[] {0, 0});
 
@@ -76,7 +75,7 @@ class MoveTest {
 
     @Test
     void isMoveValidUnoccupiedEndingSquareShouldReturnTrue() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = Square.getSquare(new int[] {4, 3});
 
@@ -85,7 +84,7 @@ class MoveTest {
 
     @Test
     void isMoveValidOccupiedEndingSquareShouldReturnFalse() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = Square.getSquare(new int[] {5, 3});
 
@@ -94,7 +93,7 @@ class MoveTest {
 
     @Test
     void isMoveValidNoPiecesInBetweenShouldReturnTrue() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = Square.getSquare(new int[] {3, 3});
 
@@ -103,7 +102,7 @@ class MoveTest {
 
     @Test
     void isMoveValidPiecesInBetweenShouldReturnFalse() {
-        Piece piece = attacker.getPiece("A0");
+        Piece piece = attacker.getPieceByID("A0");
         Square startingSquare = piece.getCurrentSquare();
         Square endingSquare = Square.getSquare(new int[] {7, 3});
 

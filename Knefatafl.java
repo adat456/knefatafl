@@ -27,6 +27,8 @@ public class Knefatafl {
         Game game = new Game(attacker, defender, turnTimeLimit);
 
         while ((Move.getTotalMoves() < Move.getMoveLimit()) && game.getVictor() == null) {
+            System.out.println("Turn " + Move.getTotalMoves());
+
             Player currentPlayer = game.getCurrentPlayer();
             String pieceID = "";
 
@@ -46,13 +48,15 @@ public class Knefatafl {
                 int y = input.nextInt();
                 int[] coords = {x, y};
 
-                Piece piece = currentPlayer.getPiece(pieceID);
+                Piece piece = currentPlayer.getPieceByID(pieceID);
                 Square startingSquare = piece.getCurrentSquare();
                 Square endingSquare = Square.getSquare(coords);
 
                 if (Move.isMoveValid(game, piece, startingSquare, endingSquare)) {
                     currentPlayer.addNewestMove(piece, startingSquare, endingSquare);
                     piece.setCurrentSquare(endingSquare);
+                    // check if king is dead
+                    Eliminate.eliminateOpponents(endingSquare, game.getNonCurrentPlayer());
                     moveMade = true;
                 }
             }

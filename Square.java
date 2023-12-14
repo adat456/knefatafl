@@ -1,11 +1,17 @@
 package knefatafl;
 
+import java.util.Arrays;
+
 public class Square {
     private int[] coords;
     private boolean occupied = false;
     private boolean refuge;
     private boolean hostile;
     private static Square[][] board = new Square[11][11];
+
+    public Square(int[] coords) {
+        this.coords = coords;
+    }
 
     public Square(int[] coords, boolean refuge, boolean hostile) {
         this.coords = coords;
@@ -30,6 +36,12 @@ public class Square {
         board = newBoard;
     }
 
+    public static boolean squareExists(int[] coords) {
+        int x = coords[0];
+        int y = coords[1];
+        return !(x < 0 || x > 10 || y < 0 || y > 10);
+    }
+
     public static Square getSquare(int[] coords) throws IllegalArgumentException {
         int x = coords[0];
         int y = coords[1];
@@ -44,6 +56,19 @@ public class Square {
 
     public void toggleOccupied() {
         occupied = !occupied;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Square square = (Square) o;
+        return Arrays.equals(coords, square.getCoords());
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(coords);
     }
 
     public int[] getCoords() {

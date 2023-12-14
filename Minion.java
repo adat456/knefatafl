@@ -11,9 +11,13 @@ public class Minion extends Piece {
 
     public void eliminate() {
         eliminated = true;
+        getCurrentSquare().toggleOccupied();
+        setCurrentSquare(new Square(new int[] {-1, -1}));
     }
 
     public boolean isEliminated() {
         return eliminated;
     }
+
+    public String getID() { return id; }
 }

@@ -36,6 +36,13 @@ public class Game {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+    public Player getNonCurrentPlayer() {
+        if (currentPlayer.getTeam().equals("Attackers")) {
+            return attacker;
+        } else {
+            return defender;
+        }
+    }
 
     public void setVictor(Player victor) {
         this.victor = victor;
