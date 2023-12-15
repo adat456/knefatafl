@@ -57,11 +57,11 @@ public class Player {
         return allPieces.get(pieceIndex);
     }
 
-    public Piece[] getPieceBySquare(Square square) {
-        Piece[] targetPiece = new Piece[1];
+    public ArrayList<Piece> getPieceBySquare(Square square) {
+        ArrayList<Piece> targetPiece = new ArrayList<>(1);
         for (Piece currentPiece : allPieces) {
             if (currentPiece.getCurrentSquare().equals(square)) {
-                targetPiece[0] = currentPiece;
+                targetPiece.add(currentPiece);
             }
         }
         return targetPiece;

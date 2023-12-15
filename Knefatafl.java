@@ -56,7 +56,7 @@ public class Knefatafl {
                     currentPlayer.addNewestMove(piece, startingSquare, endingSquare);
                     piece.setCurrentSquare(endingSquare);
                     // check if king is dead
-                    Eliminate.eliminateOpponents(endingSquare, game.getNonCurrentPlayer());
+                    Eliminate.eliminateOpponents(endingSquare, currentPlayer, game.getNonCurrentPlayer());
                     moveMade = true;
                 }
             }
