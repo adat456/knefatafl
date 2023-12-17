@@ -51,8 +51,4 @@ public class Game {
     public Player getVictor() {
         return victor;
     }
-
-    public void displayVictor() {
-
-    }
 }

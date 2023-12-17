@@ -36,6 +36,28 @@ public class Square {
         board = newBoard;
     }
 
+    public static int[] changeCoords(int[] coords, String axis, String operation) {
+        int[] newCoords = new int[2];
+        if (axis.equals("x")) {
+            if (operation.equals("+")) {
+                newCoords[0] = coords[0] + 1;
+                newCoords[1] = coords[1];
+            } else if (operation.equals("-")) {
+                newCoords[0] = coords[0] - 1;
+                newCoords[1] = coords[1];
+            }
+        } else if (axis.equals("y")) {
+            if (operation.equals("+")) {
+                newCoords[0] = coords[0];
+                newCoords[1] = coords[1] + 1;
+            } else if (operation.equals("-")) {
+                newCoords[0] = coords[0];
+                newCoords[1] = coords[1] - 1;
+            }
+        }
+        return newCoords;
+    }
+
     public static boolean squareExists(int[] coords) {
         int x = coords[0];
         int y = coords[1];
@@ -52,12 +74,6 @@ public class Square {
         return board[x][y];
     }
 
-    // public Square[] getSurroundingSquares() {}
-
-    public void toggleOccupied() {
-        occupied = !occupied;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,6 +87,9 @@ public class Square {
         return Arrays.hashCode(coords);
     }
 
+    public void toggleOccupied() {
+        occupied = !occupied;
+    }
     public int[] getCoords() {
         return coords;
     }

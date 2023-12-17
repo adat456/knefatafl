@@ -24,6 +24,7 @@ public class Knefatafl {
         Square.createBoard();
         Player attacker = new Player(attackersName, "Attackers");
         Player defender = new Player(defendersName, "Defenders");
+        King king = ((King)defender.getPieceByID("D12"));
         Game game = new Game(attacker, defender, turnTimeLimit);
 
         while ((Move.getTotalMoves() < Move.getMoveLimit()) && game.getVictor() == null) {
@@ -55,13 +56,25 @@ public class Knefatafl {
                 if (Move.isMoveValid(game, piece, startingSquare, endingSquare)) {
                     currentPlayer.addNewestMove(piece, startingSquare, endingSquare);
                     piece.setCurrentSquare(endingSquare);
-                    // check if king is dead
+                    // after movement, check on the king
+                    String kingStatus = king.determineStatus(attacker);
+                    if (kingStatus.equals("Attackers win.")) {
+                        game.setVictor(attacker);
+                        break;
+                    }
+                    if (kingStatus.equals("Defenders win")) {
+                        game.setVictor(defender);
+                        break;
+                    }
+                    // then eliminate any opponent pieces and mark move as complete
                     Eliminate.eliminateOpponents(endingSquare, currentPlayer, game.getNonCurrentPlayer());
                     moveMade = true;
                 }
             }
             game.switchTurn();
         }
+
+        System.out.println(String.format("%s (%s) has won.", game.getVictor().getName(), game.getVictor().getTeam()));
 
         input.close();
     }

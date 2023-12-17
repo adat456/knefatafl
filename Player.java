@@ -1,8 +1,6 @@
 package knefatafl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 public class Player {
     private String name;
@@ -75,4 +73,5 @@ public class Player {
     public String getTeam() {
         return team;
     }
+    public String getName() { return name; }
 }
