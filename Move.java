@@ -1,5 +1,6 @@
 package knefatafl;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 // public class Move implements Comparable<Move> {
@@ -112,7 +113,18 @@ public class Move {
         totalMoves += 1;
     }
 
-    // @Override public int compareTo(Move move2) {}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Move move = (Move) o;
+        return Objects.equals(piece, move.piece) && Objects.equals(startingSquare, move.startingSquare) && Objects.equals(endingSquare, move.endingSquare);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(piece, startingSquare, endingSquare);
+    }
 
     public static int getMoveLimit() {
         return moveLimit;

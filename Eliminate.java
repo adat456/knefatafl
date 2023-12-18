@@ -28,7 +28,7 @@ public class Eliminate {
         ArrayList<Piece> capturedPiece = new ArrayList<>(1);
 
         // is there a square?
-        int[] firstSquareCoords = changeCoords(coords, axis, operation);
+        int[] firstSquareCoords = Square.changeCoords(coords, axis, operation);
         if (!Square.squareExists(firstSquareCoords)) return capturedPiece;
         // does the square have a piece?
         Square firstSquare = Square.getSquare(firstSquareCoords);
@@ -37,7 +37,7 @@ public class Eliminate {
         ArrayList<Piece> potentialOpponentPiece = opponent.getPieceBySquare(firstSquare);
         if (potentialOpponentPiece.isEmpty()) return capturedPiece;
         // is there a second square?
-        int[] secondSquareCoords = changeCoords(firstSquareCoords, axis, operation);
+        int[] secondSquareCoords = Square.changeCoords(firstSquareCoords, axis, operation);
         if (!Square.squareExists(secondSquareCoords)) return capturedPiece;
 
         // is the second square a refuge/hostile square? is there an opponent or an ally on the square? if so, capture >:)
@@ -78,7 +78,7 @@ public class Eliminate {
     }
 
     private static ArrayList<Piece> findPotentialShieldWallEliminees(Player opponent, int[] coords, String axis, String operator, ArrayList<Piece> potentialEliminees) {
-        Square square = Square.getSquare(changeCoords(coords, axis, operator));
+        Square square = Square.getSquare(Square.changeCoords(coords, axis, operator));
         // base case -- must not be a refuge square or an unoccupied square
         if (square.isRefuge() || !square.isOccupied()) {
             return potentialEliminees;
@@ -89,7 +89,7 @@ public class Eliminate {
                 return potentialEliminees;
             } else {
                 potentialEliminees.addAll(potentialEliminee);
-                return findPotentialShieldWallEliminees(opponent, changeCoords(coords, axis, operator), axis, operator, potentialEliminees);
+                return findPotentialShieldWallEliminees(opponent, Square.changeCoords(coords, axis, operator), axis, operator, potentialEliminees);
             }
         }
     }
@@ -130,39 +130,17 @@ public class Eliminate {
 
         // determine if flanking walls/squares contain ally pieces or at least a refuge square
         boolean flankingWallsIntact = true;
-        Square firstFlankingSquare = Square.getSquare(changeCoords(coordsOfFirstPotentialEliminee, axisOfFlankingMinions, operatorOfFirstMinion));
-        Square lastFlankingSquare = Square.getSquare(changeCoords(coordsOfLastPotentialEliminee, axisOfFlankingMinions, operatorOfLastMinion));
+        Square firstFlankingSquare = Square.getSquare(Square.changeCoords(coordsOfFirstPotentialEliminee, axisOfFlankingMinions, operatorOfFirstMinion));
+        Square lastFlankingSquare = Square.getSquare(Square.changeCoords(coordsOfLastPotentialEliminee, axisOfFlankingMinions, operatorOfLastMinion));
         if ((ally.getPieceBySquare(firstFlankingSquare).isEmpty() && !firstFlankingSquare.isRefuge()) || (ally.getPieceBySquare(lastFlankingSquare).isEmpty() && !lastFlankingSquare.isRefuge())) flankingWallsIntact = false;
 
         // determine if front wall/squares contain ally pieces
         boolean frontWallIntact = true;
         for (Piece potentialEliminee : potentialEliminees) {
-            Square frontSquare = Square.getSquare(changeCoords(potentialEliminee.getCurrentSquare().getCoords(), axisOfFrontMinions, operatorOfFrontMinions));
+            Square frontSquare = Square.getSquare(Square.changeCoords(potentialEliminee.getCurrentSquare().getCoords(), axisOfFrontMinions, operatorOfFrontMinions));
             if (ally.getPieceBySquare(frontSquare).isEmpty()) frontWallIntact = false;
         }
 
         return flankingWallsIntact && frontWallIntact;
-    }
-
-    private static int[] changeCoords(int[] coords, String axis, String operation) {
-        int[] newCoords = new int[2];
-        if (axis.equals("x")) {
-            if (operation.equals("+")) {
-                newCoords[0] = coords[0] + 1;
-                newCoords[1] = coords[1];
-            } else if (operation.equals("-")) {
-                newCoords[0] = coords[0] - 1;
-                newCoords[1] = coords[1];
-            }
-        } else if (axis.equals("y")) {
-            if (operation.equals("+")) {
-                newCoords[0] = coords[0];
-                newCoords[1] = coords[1] + 1;
-            } else if (operation.equals("-")) {
-                newCoords[0] = coords[0];
-                newCoords[1] = coords[1] - 1;
-            }
-        }
-        return newCoords;
     }
 }
