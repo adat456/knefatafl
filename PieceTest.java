@@ -37,7 +37,7 @@ class PieceTest {
     }
 
     @Test
-    void findALlValidSquaresForAttackerThatCanMoveAllFourDirectins() {
+    void findALlValidSquaresForAttackerThatCanMoveAllFourDirections() {
         Minion A0 = (Minion)attacker.getPieceByID("A0");
         A0.setCurrentSquare(Square.getSquare(new int[] {3, 3}));
         ArrayList<Square> validSquares = A0.findAllValidSquares();

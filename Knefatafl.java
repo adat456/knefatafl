@@ -28,11 +28,18 @@ public class Knefatafl {
         Game game = new Game(attacker, defender, turnTimeLimit);
 
         while ((Move.getTotalMoves() < Move.getMoveLimit()) && game.getVictor() == null) {
+            Player currentPlayer = game.getCurrentPlayer();
+            Player nonCurrentPlayer = game.getNonCurrentPlayer();
+
+            if (!currentPlayer.anyValidSquaresRemaining()) {
+                game.setVictor(nonCurrentPlayer);
+                break;
+            }
+
             System.out.println("Turn " + Move.getTotalMoves());
 
-            Player currentPlayer = game.getCurrentPlayer();
+            // getting the piece to be moved
             String pieceID = "";
-
             boolean validPiece = false;
             while (!validPiece) {
                 System.out.print("Select piece: ");
@@ -42,6 +49,8 @@ public class Knefatafl {
                 validPiece = currentPlayer.isPieceValid(pieceID.trim());
             }  
 
+            // getting, validating, and making the move
+            // determining king's status and doing any eliminations
             boolean moveMade = false;
             while (!moveMade) {
                 System.out.print("Move piece " + pieceID + " to square: ");
@@ -53,8 +62,12 @@ public class Knefatafl {
                 Square startingSquare = piece.getCurrentSquare();
                 Square endingSquare = Square.getSquare(coords);
 
-                if (Move.isMoveValid(game, piece, startingSquare, endingSquare)) {
-                    currentPlayer.addNewestMove(piece, startingSquare, endingSquare);
+                Move possibleMove = new Move(piece, startingSquare, endingSquare);
+                if (
+                        Move.isMoveValid(game, piece, startingSquare, endingSquare) &&
+                        !currentPlayer.isPossibleMoveStartOfLastThreeMoveSequences(possibleMove)
+                ) {
+                    currentPlayer.addNewestMove(possibleMove);
                     piece.setCurrentSquare(endingSquare);
                     // after movement, check on the king
                     String kingStatus = king.determineStatus(attacker);

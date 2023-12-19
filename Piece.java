@@ -1,6 +1,7 @@
 package knefatafl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Piece {
     private Square currentSquare;

@@ -1,6 +1,7 @@
 package knefatafl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Player {
     private String name;
@@ -65,13 +66,73 @@ public class Player {
         return targetPiece;
     }
 
-    public void addNewestMove(Piece piece, Square currentSquare, Square endingSquare) {
-        Move newMove = new Move(piece, currentSquare, endingSquare);
-        allMoves.add(newMove);
+    // need to add to game
+    public boolean anyValidSquaresRemaining() {
+        boolean validSquaresRemaining = false;
+
+        for (Piece piece : allPieces) {
+            if (piece instanceof Minion) {
+                if (!((Minion)piece).isEliminated() && !piece.findAllValidSquares().isEmpty()) validSquaresRemaining = true;
+            } else if (piece instanceof King) {
+                if (!piece.findAllValidSquares().isEmpty()) {
+                    validSquaresRemaining = true;
+                }
+            }
+
+            if (validSquaresRemaining) break;
+        }
+
+        return validSquaresRemaining;
     }
 
-    public String getTeam() {
-        return team;
+    /* public boolean isPossibleMoveSameAsLastThreeMoves(Piece piece, Square currentSquare, Square endingSquare) {
+        if (allMoves.size() <= 3) return false;
+        Move possibleMove = new Move(piece, currentSquare, endingSquare);
+        return (possibleMove.equals(allMoves.get(2)) && possibleMove.equals(allMoves.get(1)) && possibleMove.equals(allMoves.get(0)));
+    } */
+
+    public boolean isPossibleMoveStartOfLastThreeMoveSequences(Move possibleMove) {
+        // minimum number of moves in a repetitive sequence is 2; 2 * 3 = 6, so if the total number of moves is 5 or fewer, the sixth/possible move will finish the third repetition, which is fine
+        if (allMoves.size() <= 5) return false;
+
+        Move potentialStartOfSequence = null;
+        int potentialLengthOfSequence = 0;
+
+        for (int i = 2; i <= 6; i++) {
+            if (possibleMove.equals(allMoves.get(allMoves.size() - i))) {
+                potentialStartOfSequence = allMoves.get(allMoves.size() - i);
+                potentialLengthOfSequence = i;
+                break;
+            }
+        }
+
+        if (potentialLengthOfSequence == 0 || potentialStartOfSequence == null) return false;
+        if (potentialLengthOfSequence * 3 > allMoves.size()) return false;
+
+        boolean allThreeSequencesAreTheSame = true;
+        for (int j = 0; j < potentialLengthOfSequence; j++) {
+            if (j == 0) {
+                if (
+                    !potentialStartOfSequence.equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 2) + j)) ||
+                    !potentialStartOfSequence.equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 3) + j))
+                ) {
+                    allThreeSequencesAreTheSame = false;
+                    break;
+                }
+            } else {
+                if (
+                    !allMoves.get(allMoves.size() - (potentialLengthOfSequence) + j).equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 2) + j)) ||
+                    !allMoves.get(allMoves.size() - (potentialLengthOfSequence) + j).equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 3) + j))
+                ) {
+                    allThreeSequencesAreTheSame = false;
+                    break;
+                }
+            }
+        }
+        return allThreeSequencesAreTheSame;
     }
+
+    public void addNewestMove(Move newMove) { allMoves.add(newMove); }
+    public String getTeam() { return team; }
     public String getName() { return name; }
 }

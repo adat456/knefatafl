@@ -132,4 +132,7 @@ public class Move {
     public static int getTotalMoves() {
         return totalMoves;
     }
+    public Piece getPiece() { return piece; }
+    public Square getStartingSquare() { return startingSquare; }
+    public Square getEndingSquare() { return endingSquare; }
 }
