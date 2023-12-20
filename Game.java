@@ -11,6 +11,7 @@ public class Game {
     public Game(Player attacker, Player defender) {
         this.attacker = attacker;
         this.defender = defender;
+        this.currentPlayer = attacker;
     }
 
     public Game(Player attacker, Player defender, int turnTimeLimit) {

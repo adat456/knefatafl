@@ -35,7 +35,7 @@ public class Player {
     public boolean isPieceValid(String pieceID) {
         String pieceStart = pieceID.substring(0, 1);
         int pieceIndex = Integer.parseInt(pieceID.substring(1));
-        if (!pieceStart.equals(team.substring(0, 1)) || pieceIndex > allPieces.size() || pieceIndex < 0) {
+        if (!pieceStart.equals(team.substring(0, 1)) || pieceIndex > allPieces.size() - 1 || pieceIndex < 0) {
             System.out.println("This piece is not part of this player's team.");
             return false;
         }
@@ -66,7 +66,6 @@ public class Player {
         return targetPiece;
     }
 
-    // need to add to game
     public boolean anyValidSquaresRemaining() {
         boolean validSquaresRemaining = false;
 
@@ -85,12 +84,7 @@ public class Player {
         return validSquaresRemaining;
     }
 
-    /* public boolean isPossibleMoveSameAsLastThreeMoves(Piece piece, Square currentSquare, Square endingSquare) {
-        if (allMoves.size() <= 3) return false;
-        Move possibleMove = new Move(piece, currentSquare, endingSquare);
-        return (possibleMove.equals(allMoves.get(2)) && possibleMove.equals(allMoves.get(1)) && possibleMove.equals(allMoves.get(0)));
-    } */
-
+    // attempts to find repetitive sequences up to 5 moves long
     public boolean isPossibleMoveStartOfLastThreeMoveSequences(Move possibleMove) {
         // minimum number of moves in a repetitive sequence is 2; 2 * 3 = 6, so if the total number of moves is 5 or fewer, the sixth/possible move will finish the third repetition, which is fine
         if (allMoves.size() <= 5) return false;
@@ -98,6 +92,7 @@ public class Player {
         Move potentialStartOfSequence = null;
         int potentialLengthOfSequence = 0;
 
+        // looking for a match between the possible move and the start of a sequence (so it starts with the second to most recent move)
         for (int i = 2; i <= 6; i++) {
             if (possibleMove.equals(allMoves.get(allMoves.size() - i))) {
                 potentialStartOfSequence = allMoves.get(allMoves.size() - i);
@@ -107,14 +102,20 @@ public class Player {
         }
 
         if (potentialLengthOfSequence == 0 || potentialStartOfSequence == null) return false;
+        // safeguards against false sequences
         if (potentialLengthOfSequence * 3 > allMoves.size()) return false;
 
         boolean allThreeSequencesAreTheSame = true;
+        // moves forward from the first/starting move of each repetition to ensure that subsequent moves are equal as well
+        // counter is initialized to 0 because the possible move has only been verified to equal the first/starting move of the third repetition (not the second and third)
+        // e.g., in a list of six moves (with the potential move being the seventh)
+            // the first loop would compare move 0, move 2, and possible move (move 4 has already been compared)
+            // the second loop would compare move 1, move 3, and move 5
         for (int j = 0; j < potentialLengthOfSequence; j++) {
             if (j == 0) {
                 if (
-                    !potentialStartOfSequence.equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 2) + j)) ||
-                    !potentialStartOfSequence.equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 3) + j))
+                     !possibleMove.equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 2))) ||
+                     !possibleMove.equals(allMoves.get(allMoves.size() - (potentialLengthOfSequence * 3)))
                 ) {
                     allThreeSequencesAreTheSame = false;
                     break;
@@ -128,6 +129,7 @@ public class Player {
                     break;
                 }
             }
+
         }
         return allThreeSequencesAreTheSame;
     }

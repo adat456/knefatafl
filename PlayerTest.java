@@ -17,15 +17,33 @@ class PlayerTest {
     }
 
     @Test
-    void isPieceValid() {
+    void defenderPieceIDIsNotAValidAttackerPieceID() {
+        assertFalse(attacker.isPieceValid("D12"));
     }
 
     @Test
-    void getPieceByID() {
+    void incorrectLetterOfPieceIDIsNotAValidAttackerOrDefenderPieceID() {
+        assertTrue(!attacker.isPieceValid("S0") && !defender.isPieceValid("S0"));
     }
 
     @Test
-    void getPieceBySquare() {
+    void outOfBoundsPieceIDIsNotAValidAttackerPieceID() {
+        assertFalse(attacker.isPieceValid("A24"));
+    }
+
+    @Test
+    void negativePieceIDIsNotAValidDefenderPieceID() {
+        assertFalse(defender.isPieceValid("D-1"));
+    }
+
+    @Test
+    void attackerPieceIDIsAValidAttackerPieceID() {
+        assertTrue(attacker.isPieceValid("A0"));
+    }
+
+    @Test
+    void kingPieceIDIsAValidDefenderPieceID() {
+        assertTrue(defender.isPieceValid("D12"));
     }
 
     // anyValidSquaresRemaining
@@ -141,7 +159,32 @@ class PlayerTest {
     }
 
     @Test
-    void seventhPossibleMoveIsNotAFourthRepetitionOfATwoMoveSequence() {
+    void seventhPossibleMoveIsAFourthRepetitionOfATwoMoveSequenceWithExtraMovesInBeginning() {
+        Piece A0 = attacker.getPieceByID("A0");
+
+        Move move00 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {3, 3}));
+        Move move0 = new Move(A0, Square.getSquare(new int[] {3, 3}), Square.getSquare(new int[] {0, 3}));
+        Move move1 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        Move move2 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        Move move3 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        Move move4 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        Move move5 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        Move move6 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        attacker.addNewestMove(move00);
+        attacker.addNewestMove(move0);
+        attacker.addNewestMove(move1);
+        attacker.addNewestMove(move2);
+        attacker.addNewestMove(move3);
+        attacker.addNewestMove(move4);
+        attacker.addNewestMove(move5);
+        attacker.addNewestMove(move6);
+
+        Move move7 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        assertTrue(attacker.isPossibleMoveStartOfLastThreeMoveSequences(move7));
+    }
+
+    @Test
+    void seventhPossibleMoveIsNotAFourthRepetitionOfATwoMoveSequenceBecauseItIsDifferentFromTheFirstMoveOfTheSequence() {
         Piece A0 = attacker.getPieceByID("A0");
 
         Move move1 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
@@ -158,6 +201,27 @@ class PlayerTest {
         attacker.addNewestMove(move6);
 
         Move move7 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 2}));
+        assertFalse(attacker.isPossibleMoveStartOfLastThreeMoveSequences(move7));
+    }
+
+    @Test
+    void seventhPossibleMoveIsNotAFourthRepetitionOfAFalseTwoMoveSequenceBecauseFirstMoveOfFirstSequenceIsDifferent() {
+        Piece A0 = attacker.getPieceByID("A0");
+
+        Move move1 = new Move(A0, Square.getSquare(new int[] {0, 2}), Square.getSquare(new int[] {0, 1}));
+        Move move2 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        Move move3 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        Move move4 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        Move move5 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        Move move6 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        attacker.addNewestMove(move1);
+        attacker.addNewestMove(move2);
+        attacker.addNewestMove(move3);
+        attacker.addNewestMove(move4);
+        attacker.addNewestMove(move5);
+        attacker.addNewestMove(move6);
+
+        Move move7 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
         assertFalse(attacker.isPossibleMoveStartOfLastThreeMoveSequences(move7));
     }
 
@@ -189,7 +253,7 @@ class PlayerTest {
     }
 
     @Test
-    void tenthPossibleMoveIsNotAFourthRepetitionOfAThreeMoveSequence() {
+    void tenthPossibleMoveIsNotAFourthRepetitionOfAThreeMoveSequenceBecauseItIsDifferentFromFirstMoveOfSequence() {
         Piece A0 = attacker.getPieceByID("A0");
 
         Move move1 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
@@ -216,18 +280,45 @@ class PlayerTest {
     }
 
     @Test
-    void tenthPossibleMoveIsNotAFourthRepetitionBecauseAThreeMoveSequenceIsInterrupted() {
+    void tenthPossibleMoveIsNotAFourthRepetitionOfThreeMoveSequenceBecauseThereAreOnlyTwoRepetitionsFollowedByDifferentSequence() {
+        Piece A0 = attacker.getPieceByID("A0");
+
+        Move move1 = new Move(A0, Square.getSquare(new int[]{0, 3}), Square.getSquare(new int[]{0, 1}));
+        Move move2 = new Move(A0, Square.getSquare(new int[]{0, 1}), Square.getSquare(new int[]{0, 2}));
+        Move move3 = new Move(A0, Square.getSquare(new int[]{0, 2}), Square.getSquare(new int[]{0, 3}));
+        Move move4 = new Move(A0, Square.getSquare(new int[]{0, 3}), Square.getSquare(new int[]{0, 1}));
+        Move move5 = new Move(A0, Square.getSquare(new int[]{0, 1}), Square.getSquare(new int[]{0, 2}));
+        Move move6 = new Move(A0, Square.getSquare(new int[]{0, 2}), Square.getSquare(new int[]{0, 3}));
+        Move move7 = new Move(A0, Square.getSquare(new int[]{0, 3}), Square.getSquare(new int[]{0, 2}));
+        Move move8 = new Move(A0, Square.getSquare(new int[]{0, 2}), Square.getSquare(new int[]{0, 1}));
+        Move move9 = new Move(A0, Square.getSquare(new int[]{0, 1}), Square.getSquare(new int[]{0, 3}));
+        attacker.addNewestMove(move1);
+        attacker.addNewestMove(move2);
+        attacker.addNewestMove(move3);
+        attacker.addNewestMove(move4);
+        attacker.addNewestMove(move5);
+        attacker.addNewestMove(move6);
+        attacker.addNewestMove(move7);
+        attacker.addNewestMove(move8);
+        attacker.addNewestMove(move9);
+
+        Move move10 = new Move(A0, Square.getSquare(new int[]{0, 3}), Square.getSquare(new int[]{0, 1}));
+        assertFalse(attacker.isPossibleMoveStartOfLastThreeMoveSequences(move10));
+    }
+
+    @Test
+    void tenthPossibleMoveIsNotAFourthRepetitionOfThreeMoveSequenceBecauseThereAreOnlyTwoRepetitionsInterruptedByDifferentSequence() {
         Piece A0 = attacker.getPieceByID("A0");
 
         Move move1 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
         Move move2 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 2}));
         Move move3 = new Move(A0, Square.getSquare(new int[] {0, 2}), Square.getSquare(new int[] {0, 3}));
-        Move move4 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
-        Move move5 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 2}));
-        Move move6 = new Move(A0, Square.getSquare(new int[] {0, 2}), Square.getSquare(new int[] {0, 3}));
-        Move move7 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 3}));
-        Move move8 = new Move(A0, Square.getSquare(new int[] {0, 2}), Square.getSquare(new int[] {0, 1}));
-        Move move9 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        Move move4 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 2}));
+        Move move5 = new Move(A0, Square.getSquare(new int[] {0, 2}), Square.getSquare(new int[] {0, 1}));
+        Move move6 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 3}));
+        Move move7 = new Move(A0, Square.getSquare(new int[] {0, 3}), Square.getSquare(new int[] {0, 1}));
+        Move move8 = new Move(A0, Square.getSquare(new int[] {0, 1}), Square.getSquare(new int[] {0, 2}));
+        Move move9 = new Move(A0, Square.getSquare(new int[] {0, 2}), Square.getSquare(new int[] {0, 3}));
         attacker.addNewestMove(move1);
         attacker.addNewestMove(move2);
         attacker.addNewestMove(move3);

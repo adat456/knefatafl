@@ -1,6 +1,7 @@
 package knefatafl;
 
 import java.util.Scanner;
+import java.util.Timer;
 
 public class Knefatafl {
     public static void main(String[] args) {
@@ -28,6 +29,8 @@ public class Knefatafl {
         Game game = new Game(attacker, defender, turnTimeLimit);
 
         while ((Move.getTotalMoves() < Move.getMoveLimit()) && game.getVictor() == null) {
+            Timer timer = new Timer();
+            timer.schedule(, turnTimeLimit * 100);
             Player currentPlayer = game.getCurrentPlayer();
             Player nonCurrentPlayer = game.getNonCurrentPlayer();
 
